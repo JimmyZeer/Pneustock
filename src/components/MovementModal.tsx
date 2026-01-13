@@ -40,20 +40,23 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
         else setReason('Correction');
     }, [type]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!productId || quantity <= 0) return;
 
-        createMovement(
-            productId,
-            type,
-            quantity,
-            reason,
-            currentUser.name,
-        );
-
-        showToast('Stock mis à jour ✓', 'success');
-        onClose();
+        try {
+            await createMovement(
+                productId,
+                type,
+                quantity,
+                reason,
+                currentUser.name,
+            );
+            showToast('Stock mis à jour ✓', 'success');
+            onClose();
+        } catch (err) {
+            showToast('Erreur de sauvegarde', 'error');
+        }
     };
 
     const selectedProduct = products.find(p => p.id === productId);
@@ -91,7 +94,7 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                                     />
 
                                     {showProductList && searchQuery && (
-                                        <div className="card mt-2" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                        <div className="card mt-2" style={{ maxHeight: '150px', overflowY: 'auto' }}>
                                             {filteredProducts.length === 0 ? (
                                                 <div className="p-3 text-muted text-sm">Aucun résultat</div>
                                             ) : (
@@ -155,22 +158,24 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                             </div>
                         </div>
 
-                        {/* Quantity */}
+                        {/* Quantity - with numeric keyboard */}
                         <div className="form-group">
                             <label className="form-label">Quantité</label>
                             <input
-                                type="number"
+                                type="text"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 className="form-input"
-                                min="1"
                                 value={quantity}
                                 onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
+                                style={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}
                             />
                         </div>
 
                         {/* Reason */}
                         <div className="form-group">
                             <label className="form-label">Motif</label>
-                            <div className="filter-chips">
+                            <div className="filter-chips" style={{ flexWrap: 'wrap' }}>
                                 {movementReasons.map(r => (
                                     <button
                                         key={r}

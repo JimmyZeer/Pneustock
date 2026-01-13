@@ -28,7 +28,7 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
 
     const dimensionPreview = `${width}/${aspectRatio} R${rimDiameter} ${loadIndex}${speedIndex}`;
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!brand.trim() || !model.trim()) {
@@ -51,15 +51,18 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
             qtyReserved: editProduct?.qtyReserved || 0
         };
 
-        if (editProduct) {
-            updateProduct(editProduct.id, productData);
-            showToast('Référence mise à jour ✓', 'success');
-        } else {
-            addProduct(productData);
-            showToast('Référence créée ✓', 'success');
+        try {
+            if (editProduct) {
+                await updateProduct(editProduct.id, productData);
+                showToast('Référence mise à jour ✓', 'success');
+            } else {
+                await addProduct(productData);
+                showToast('Référence créée ✓', 'success');
+            }
+            onClose();
+        } catch (err) {
+            showToast('Erreur de sauvegarde', 'error');
         }
-
-        onClose();
     };
 
     return (
@@ -85,31 +88,31 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
                             <label className="form-label">Dimension</label>
                             <div className="flex gap-2">
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className="form-input"
                                     value={width}
                                     onChange={(e) => setWidth(parseInt(e.target.value) || 0)}
                                     placeholder="205"
-                                    min="135"
-                                    max="335"
                                 />
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className="form-input"
                                     value={aspectRatio}
                                     onChange={(e) => setAspectRatio(parseInt(e.target.value) || 0)}
                                     placeholder="55"
-                                    min="25"
-                                    max="85"
                                 />
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className="form-input"
                                     value={rimDiameter}
                                     onChange={(e) => setRimDiameter(parseInt(e.target.value) || 0)}
                                     placeholder="16"
-                                    min="12"
-                                    max="24"
                                 />
                             </div>
                         </div>
@@ -120,6 +123,7 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
                             <div className="flex gap-2">
                                 <input
                                     type="text"
+                                    inputMode="numeric"
                                     className="form-input"
                                     value={loadIndex}
                                     onChange={(e) => setLoadIndex(e.target.value)}
@@ -193,11 +197,12 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
                             <div className="form-group">
                                 <label className="form-label">Stock initial</label>
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className="form-input"
                                     value={qtyOnHand}
                                     onChange={(e) => setQtyOnHand(parseInt(e.target.value) || 0)}
-                                    min="0"
                                 />
                             </div>
                         )}
@@ -206,11 +211,12 @@ export function ProductModal({ onClose, editProduct }: ProductModalProps) {
                             <div className="form-group" style={{ flex: 1 }}>
                                 <label className="form-label">Seuil alerte</label>
                                 <input
-                                    type="number"
+                                    type="text"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className="form-input"
                                     value={reorderThreshold}
                                     onChange={(e) => setReorderThreshold(parseInt(e.target.value) || 0)}
-                                    min="0"
                                 />
                             </div>
 
