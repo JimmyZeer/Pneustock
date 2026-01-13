@@ -31,7 +31,7 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
         return dim.includes(search) ||
             p.brand.toLowerCase().includes(search) ||
             p.model.toLowerCase().includes(search);
-    }).slice(0, 5);
+    }).slice(0, 4);
 
     // Set default reason based on type
     useEffect(() => {
@@ -75,9 +75,9 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                         <div className="form-group">
                             <label className="form-label">Référence</label>
                             {prefillProduct ? (
-                                <div className="card" style={{ padding: 'var(--spacing-md)' }}>
-                                    <p className="font-bold">{formatDimension(prefillProduct)}</p>
-                                    <p className="text-sm text-muted">{prefillProduct.brand} {prefillProduct.model}</p>
+                                <div className="callout callout-info">
+                                    <span>🛞</span>
+                                    <span><strong>{formatDimension(prefillProduct)}</strong> - {prefillProduct.brand}</span>
                                 </div>
                             ) : (
                                 <>
@@ -94,15 +94,14 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                                     />
 
                                     {showProductList && searchQuery && (
-                                        <div className="card mt-2" style={{ maxHeight: '150px', overflowY: 'auto' }}>
+                                        <div className="card mt-2" style={{ maxHeight: '120px', overflowY: 'auto' }}>
                                             {filteredProducts.length === 0 ? (
                                                 <div className="p-3 text-muted text-sm">Aucun résultat</div>
                                             ) : (
                                                 filteredProducts.map(p => (
                                                     <div
                                                         key={p.id}
-                                                        className="p-3"
-                                                        style={{ borderBottom: '1px solid var(--color-border)', cursor: 'pointer' }}
+                                                        style={{ padding: '8px 12px', borderBottom: '1px solid var(--color-border)', cursor: 'pointer' }}
                                                         onClick={() => {
                                                             setProductId(p.id);
                                                             setSearchQuery(`${formatDimension(p)} - ${p.brand}`);
@@ -110,7 +109,7 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                                                         }}
                                                     >
                                                         <p className="font-bold text-sm">{formatDimension(p)}</p>
-                                                        <p className="text-xs text-muted">{p.brand} • Stock: {p.qtyOnHand}</p>
+                                                        <p className="text-xs text-muted">{p.brand} • {p.qtyOnHand} en stock</p>
                                                     </div>
                                                 ))
                                             )}
@@ -118,9 +117,9 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                                     )}
 
                                     {selectedProduct && !showProductList && (
-                                        <div className="mt-2 flex items-center gap-2">
-                                            <span className="badge badge-primary">✓</span>
-                                            <span className="text-sm">{formatDimension(selectedProduct)} - {selectedProduct.brand}</span>
+                                        <div className="callout callout-info mt-2">
+                                            <span>✓</span>
+                                            <span>{formatDimension(selectedProduct)} - {selectedProduct.brand}</span>
                                         </div>
                                     )}
                                 </>
@@ -158,7 +157,7 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                             </div>
                         </div>
 
-                        {/* Quantity - with numeric keyboard */}
+                        {/* Quantity */}
                         <div className="form-group">
                             <label className="form-label">Quantité</label>
                             <input
@@ -168,20 +167,21 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                                 className="form-input"
                                 value={quantity}
                                 onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
-                                style={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}
+                                style={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', height: '56px' }}
                             />
                         </div>
 
                         {/* Reason */}
                         <div className="form-group">
                             <label className="form-label">Motif</label>
-                            <div className="filter-chips" style={{ flexWrap: 'wrap' }}>
+                            <div className="filter-chips" style={{ flexWrap: 'wrap', gap: '6px' }}>
                                 {movementReasons.map(r => (
                                     <button
                                         key={r}
                                         type="button"
                                         className={`filter-chip ${reason === r ? 'active' : ''}`}
                                         onClick={() => setReason(r)}
+                                        style={{ padding: '6px 12px', fontSize: '0.75rem' }}
                                     >
                                         {r}
                                     </button>
@@ -196,7 +196,7 @@ export function MovementModal({ onClose, prefillProduct, prefillType }: Movement
                             className="btn-primary-full"
                             disabled={!productId || quantity <= 0}
                         >
-                            Confirmer
+                            ✓ Confirmer le mouvement
                         </button>
                     </div>
                 </form>

@@ -889,8 +889,9 @@ h3 {
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 90;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
 }
 
 .drawer {
@@ -898,13 +899,31 @@ h3 {
   top: 0;
   right: 0;
   bottom: 0;
+  left: 0;
   width: 100%;
-  max-width: 400px;
   background: var(--color-bg);
-  z-index: 95;
+  z-index: 105;
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.3s ease;
+  overflow: hidden;
+}
+
+/* On larger screens, show as side panel */
+@media (min-width: 481px) {
+  .drawer {
+    left: auto;
+    width: 400px;
+    max-width: 100%;
+  }
+}
+
+.drawer .modal-header {
+  padding-top: calc(var(--spacing-md) + env(safe-area-inset-top, 0px));
+}
+
+.drawer .modal-footer {
+  padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
 }
 
 /* ===== Forms ===== */
