@@ -1,12 +1,13 @@
 import { createContext, useContext, ReactNode } from 'react';
-import { useInventory } from '../hooks/useInventory';
+import { useSupabaseInventory } from './useSupabaseInventory';
 
-type InventoryContextType = ReturnType<typeof useInventory>;
+// Get return type of the hook
+type InventoryContextType = ReturnType<typeof useSupabaseInventory>;
 
 const InventoryContext = createContext<InventoryContextType | null>(null);
 
 export function InventoryProvider({ children }: { children: ReactNode }) {
-    const inventory = useInventory();
+    const inventory = useSupabaseInventory();
 
     return (
         <InventoryContext.Provider value={inventory}>
