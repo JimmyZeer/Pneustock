@@ -1,0 +1,8 @@
+{
+    "$schema": "https://api.cloudflare.com/schemas/v4/wrangler.json",
+    "name": "pneustock",
+    "compatibility_date": "2026-01-13",
+    "assets": {
+        "directory": "./dist"
+    }
+}
